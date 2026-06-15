@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q Zone Coffee & Tea – Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #1a0e0a;
+    --surface: #221410;
+    --surface2: #2e1a10;
+    --gold: #c9a96e;
+    --gold-light: #e8cc99;
+    --gold-dim: #7a6040;
+    --text: #f5ede0;
+    --text-muted: #a89070;
+    --divider: rgba(201,169,110,0.25);
+    --accent: #8b1a1a;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  .hero {
+    text-align: center;
+    padding: 48px 24px 32px;
+    background: radial-gradient(ellipse at top, #2e1a10 0%, #1a0e0a 70%);
+    border-bottom: 1px solid var(--divider);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a96e' fill-opacity='0.03'%3E%3Ccircle cx='20' cy='20' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .brand {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .brand-q {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: -2px;
+    text-shadow: 0 0 40px rgba(201,169,110,0.3);
+  }
+  .brand-text {
+    text-align: left;
+  }
+  .brand-zone {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 8px;
+    line-height: 1;
+  }
+  .brand-sub {
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--text-muted);
+    text-transform: lowercase;
+    margin-top: 4px;
+  }
+  .hero-tagline {
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 16px;
+  }
+  .gold-line {
+    width: 80px;
+    height: 1px;
+    background: var(--gold-dim);
+    margin: 16px auto;
+  }
+
+  /* NAV TABS */
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--divider);
+    padding: 0 16px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .nav-wrap::-webkit-scrollbar { display: none; }
+  .nav-tabs {
+    display: inline-flex;
+    gap: 0;
+    min-width: 100%;
+    justify-content: center;
+  }
+  .nav-tab {
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .nav-tab:hover { color: var(--gold-light); }
+  .nav-tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* SECTIONS */
+  .menu-section {
+    display: none;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 20px;
+  }
+  .menu-section.active { display: block; }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+  .section-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* SECTION BANNER */
+  .section-banner {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    display: block;
+    border: 1px solid var(--divider);
+    filter: brightness(0.85) saturate(0.9);
+  }
+
+  /* ITEM LIST */
+  .item-list { display: flex; flex-direction: column; gap: 0; }
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--divider);
+    gap: 12px;
+  }
+  .item:last-child { border-bottom: none; }
+  .item-name {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.4;
+    flex: 1;
+  }
+  .item-topping {
+    font-size: 11px;
+    color: var(--gold-dim);
+    font-weight: 400;
+    margin-top: 4px;
+    letter-spacing: 0.2px;
+  }
+  .item-topping span {
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .item-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+  .item-name-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .item-name-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .item-badge {
+    font-size: 10px;
+    background: var(--accent);
+    color: #ffd4d4;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .item-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--gold);
+    white-space: nowrap;
+    min-width: 48px;
+    text-align: right;
+  }
+
+  /* CARD GROUPS */
+  .card-group {
+    background: var(--surface2);
+    border: 1px solid var(--divider);
+    border-radius: 12px;
+    padding: 20px 20px 4px;
+    margin-bottom: 20px;
+  }
+  .card-group-title {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  /* DUNG THEM GRID */
+  .addons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .addon-item {
+    background: var(--surface2);
+    border: 1px solid var(--divider);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .addon-name { font-size: 14px; color: var(--text); }
+  .addon-price { font-size: 14px; color: var(--gold); font-family: 'Playfair Display', serif; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 32px 20px 20px;
+    border-top: 1px solid var(--divider);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .footer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .footer-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+  .footer-value {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .footer-copy {
+    font-size: 11px;
+    color: var(--gold-dim);
+    margin-top: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* SEARCH */
+  .search-wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 20px 4px;
+  }
+  .search-box {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--divider);
+    border-radius: 40px;
+    padding: 10px 42px 10px 18px;
+    color: var(--text);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+  .search-box::placeholder { color: var(--text-muted); }
+  .search-box:focus { border-color: var(--gold-dim); }
+
+  .search-inner { position: relative; }
+  .search-clear {
+    position: absolute;
+    right: 34px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    display: none;
+  }
+  /* SEARCH RESULTS */
+  #search-results {
+    display: none;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 12px 20px;
+  }
+  .search-result-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .search-empty {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 32px 0;
+  }
+  .addon-item mark {
+    background: none;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .item mark {
+    background: none;
+    color: var(--gold);
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="brand">
+    <div class="brand-q">Q</div>
+    <div class="brand-text">
+      <div class="brand-zone">ZONE</div>
+      <div class="brand-sub">coffee &amp; tea</div>
+    </div>
+  </div>
+  <div class="gold-line"></div>
+  <div class="hero-tagline">Thực đơn · Menu</div>
+</div>
+
+<nav class="nav-wrap">
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('ca-phe')">Cà Phê</button>
+    <button class="nav-tab" onclick="showSection('tra')">Trà</button>
+    <button class="nav-tab" onclick="showSection('tra-sua')">Trà Sữa</button>
+    <button class="nav-tab" onclick="showSection('sua-peo')">Sữa Péo</button>
+    <button class="nav-tab" onclick="showSection('sua-chua')">Sữa Chua</button>
+    <button class="nav-tab" onclick="showSection('nuoc-ngot')">Nước Ngọt</button>
+    <button class="nav-tab" onclick="showSection('dung-them')">Topping & Thêm</button>
+  </div>
+</nav>
+
+
+<div class="search-wrap">
+  <div class="search-inner">
+    <input class="search-box" id="search-input" type="search" placeholder="Tìm món... vd: matcha, trà đào, kem trứng" autocomplete="off">
+    <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
+  </div>
+</div>
+<div id="search-results"></div>
+
+<!-- CÀ PHÊ -->
+<section class="menu-section active" id="ca-phe">
+  <img class="section-banner" src="https://www.hungryhuy.com/wp-content/uploads/vietnamese-iced-coffee-ca-phe-sua-da.jpg" alt="Cà phê Việt Nam" onerror="this.style.display='none'">
+  <div class="section-header">
+    <div class="section-title">Q. Cà Phê</div>
+  </div>
+  <div class="item-list">
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Cà phê đen</span></div><span class="item-desc">Phin truyền thống, đậm đà nguyên chất</span><span class="item-topping">+ Thêm: <span>kem trứng, kem muối +10k</span></span></div><span class="item-price">16k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Cà phê sữa</span></div><span class="item-desc">Phin pha cùng sữa đặc, ngọt dịu béo nhẹ</span><span class="item-topping">+ Thêm: <span>kem trứng, kem muối +10k</span></span></div><span class="item-price">18k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Cà phê đen máy</span></div><span class="item-desc">Espresso máy, đắng sâu, crema mịn</span><span class="item-topping">+ Thêm: <span>kem trứng, kem muối +10k</span></span></div><span class="item-price">18k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Cà phê sữa máy</span></div><span class="item-desc">Espresso hoà sữa đặc, đậm và béo hơn</span><span class="item-topping">+ Thêm: <span>kem trứng, kem muối +10k</span></span></div><span class="item-price">20k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Cà phê cam</span></div><span class="item-desc">Espresso kết hợp cam tươi, chua ngọt lạ miệng</span></div><span class="item-price">30k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Bạc xỉu</span><span class="item-badge">♥ yêu thích</span></div><span class="item-desc">Sữa nhiều hơn cà phê, nhẹ nhàng dễ uống</span><span class="item-topping">+ Thêm: <span>kem trứng, kem muối +10k</span></span></div><span class="item-price">24k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Cà phê kem trứng / muối</span></div><span class="item-desc">Phin đậm phủ lớp kem mịn béo ngậy</span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Bạc xỉu kem trứng / muối</span></div><span class="item-desc">Bạc xỉu nhẹ nhàng, topping kem trứng đặc biệt</span></div><span class="item-price">28k</span></div>
+  </div>
+</section>
+
+<!-- TRÀ -->
+<section class="menu-section" id="tra">
+  <img class="section-banner" src="https://www.hungryhuy.com/wp-content/uploads/vietnamese-lychee-tea-tra-vai.jpg" alt="Trà trái cây" onerror="this.style.display='none'">
+  <div class="section-header">
+    <div class="section-title">Trà</div>
+  </div>
+  <div class="item-list">
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà vải</span><span class="item-badge">♥</span></div><span class="item-desc">Thanh mát, thơm hương vải tươi</span><span class="item-topping">+ Thêm: <span>3Q +6k, bánh flan +6k</span></span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà đào</span></div><span class="item-desc">Ngọt dịu, hương đào chín nồng nàn</span><span class="item-topping">+ Thêm: <span>3Q +6k, bánh flan +6k</span></span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà nhãn</span></div><span class="item-desc">Vị ngọt thanh đặc trưng của nhãn</span><span class="item-topping">+ Thêm: <span>3Q +6k, đắc thơm +6k</span></span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà mãng cầu</span><span class="item-badge">♥</span></div><span class="item-desc">Vị ngọt mát lạ, thơm nhẹ</span><span class="item-topping">+ Thêm: <span>3Q +6k, đắc thơm +6k</span></span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà ổi hồng</span></div><span class="item-desc">Màu hồng đẹp mắt, chua ngọt hài hoà</span><span class="item-topping">+ Thêm: <span>3Q +6k, bánh flan +6k</span></span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà chanh / tắc</span></div><span class="item-desc">Chua nhẹ sảng khoái, giải nhiệt nhanh</span></div><span class="item-price">20k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà tắc xí muội</span></div><span class="item-desc">Chua mặn ngọt lẫn lộn, rất riêng</span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà chanh thái</span></div><span class="item-desc">Trà xanh đá, chanh tươi kiểu Thái</span></div><span class="item-price">20k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà lài kem chanh</span></div><span class="item-desc">Hương hoa lài dịu dàng, phủ kem chanh mát</span><span class="item-topping">+ Thêm: <span>kem chanh +10k, 3Q +6k</span></span></div><span class="item-price">30k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà hoa cúc thảo</span></div><span class="item-desc">Thanh nhiệt, thơm nhẹ từ hoa cúc tự nhiên</span></div><span class="item-price">30k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà gừng mật ong</span></div><span class="item-desc">Ấm người, cay nhẹ, ngọt từ mật ong rừng</span></div><span class="item-price">30k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Trà đông trùng long nhãn</span><span class="item-badge">♥</span></div><span class="item-desc">Bổ dưỡng, vị ngọt sâu, kết hợp đặc biệt</span><span class="item-topping">+ Thêm: <span>hạt dưa +12k, bánh flan +6k</span></span></div><span class="item-price">35k</span></div>
+  </div>
+</section>
+
+<!-- SỮA PÉO -->
+<section class="menu-section" id="sua-peo">
+  <img class="section-banner" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Matcha_latte.jpg/640px-Matcha_latte.jpg" alt="Sữa péo matcha latte" onerror="this.style.display='none'">
+  <div class="section-header">
+    <div class="section-title">Sữa Péo</div>
+  </div>
+  <div class="item-list">
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Cacao sữa</span></div><span class="item-desc">Socola sữa đậm vị, béo ngọt dễ uống</span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Milo dầm</span></div><span class="item-desc">Milo đá dầm mịn, ngọt mát tuổi thơ</span></div><span class="item-price">28k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Matcha latte</span></div><span class="item-desc">Matcha Nhật đắng nhẹ, hoà cùng sữa béo</span><span class="item-topping">+ Thêm: <span>kem matcha +10k, 3Q +6k</span></span></div><span class="item-price">28k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Khoai môn latte</span></div><span class="item-desc">Khoai môn tím béo bùi, thơm mùi vanilla</span><span class="item-topping">+ Thêm: <span>kem khoai môn +10k, 3Q +6k</span></span></div><span class="item-price">28k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Chocotaro latte</span><span class="item-badge">♥</span></div><span class="item-desc">Socola + khoai môn, ngọt béo cực cuốn</span><span class="item-topping">+ Thêm: <span>kem khoai môn +10k, bánh flan +6k</span></span></div><span class="item-price">35k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Chocomint latte (bạc hà)</span><span class="item-badge">♥</span></div><span class="item-desc">Socola mát lạnh bạc hà, vừa đắng vừa the</span></div><span class="item-price">35k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Berrylatte matcha (dâu / việt quất)</span><span class="item-badge">♥</span></div><span class="item-desc">Matcha xanh kết hợp berry chua ngọt đẹp mắt</span><span class="item-topping">+ Thêm: <span>kem matcha +10k, 3Q +6k</span></span></div><span class="item-price">35k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Cacao kem trứng / muối</span></div><span class="item-desc">Cacao nóng hoặc lạnh, phủ kem trứng béo mịn</span></div><span class="item-price">30k</span></div>
+  </div>
+</section>
+
+<!-- TRÀ SỮA -->
+<section class="menu-section" id="tra-sua">
+  <img class="section-banner" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Milk_tea_with_bubbles.jpg/640px-Milk_tea_with_bubbles.jpg" alt="Trà sữa" onerror="this.style.display='none'">
+  <div class="section-header">
+    <div class="section-title">Trà Sữa</div>
+  </div>
+  <div class="item-list">
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">TS Thái xanh</span></div><span class="item-desc">Trà xanh Thái đặc sắc, sữa béo nhẹ, màu xanh đẹp</span><span class="item-topping">+ Thêm: <span>3Q +6k, kem trứng +10k</span></span></div><span class="item-price">22k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">TS Truyền thống</span></div><span class="item-desc">Trà sữa kiểu cổ điển, vị cân bằng dễ uống</span><span class="item-topping">+ Thêm: <span>3Q +6k, bánh flan +6k</span></span></div><span class="item-price">22k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">TS Kem trứng / muối</span></div><span class="item-desc">Trà sữa phủ kem trứng hoặc kem muối béo ngậy</span></div><span class="item-price">28k</span></div>
+  </div>
+</section>
+
+<!-- SỮA CHUA -->
+<section class="menu-section" id="sua-chua">
+  <img class="section-banner" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Strawberry_ice_cream_cone_%285076899310%29.jpg/640px-Strawberry_ice_cream_cone_%285076899310%29.jpg" alt="Sữa chua" onerror="this.style.display='none'">
+  <div class="section-header">
+    <div class="section-title">Sữa Chua</div>
+  </div>
+  <div class="item-list">
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Sữa chua dầm</span></div><span class="item-desc">Sữa chua mịn dầm đá, chua ngọt sảng khoái</span><span class="item-topping">+ Thêm: <span>đắc thơm +6k, bánh flan +6k</span></span></div><span class="item-price">24k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Sữa chua ổi hồng</span></div><span class="item-desc">Sữa chua kết hợp ổi hồng chua ngọt lạ miệng</span><span class="item-topping">+ Thêm: <span>đắc thơm +6k, 3Q +6k</span></span></div><span class="item-price">28k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Sữa chua dâu tây</span></div><span class="item-desc">Dâu tây tươi ngọt hoà cùng sữa chua mát lạnh</span></div><span class="item-price">28k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Sữa chua việt quất</span></div><span class="item-desc">Việt quất tím đậm, chua nhẹ, nhiều antioxidant</span></div><span class="item-price">28k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Sữa chua đặc thơm</span><span class="item-badge">♥</span></div><span class="item-desc">Dứa thơm vị nhiệt đới, ngọt mát hấp dẫn</span><span class="item-topping">+ Thêm: <span>đắc thơm +6k, hạt dưa +12k</span></span></div><span class="item-price">30k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Sữa chua chanh dây</span></div><span class="item-desc">Chanh dây chua thơm đặc trưng, rất giải nhiệt</span></div><span class="item-price">28k</span></div>
+  </div>
+</section>
+
+<!-- NƯỚC NGỌT -->
+<section class="menu-section" id="nuoc-ngot">
+  <img class="section-banner" src="https://www.hungryhuy.com/wp-content/uploads/vietnamese-lemon-soda-chanh-muoi-2-sq.jpg" alt="Nước ngọt" onerror="this.style.display='none'">
+  <div class="section-header">
+    <div class="section-title">Nước Ngọt</div>
+  </div>
+  <div class="item-list">
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Cam ép</span></div><span class="item-desc">Cam tươi ép nguyên chất, vitamin C dồi dào</span></div><span class="item-price">22k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Đá me</span><span class="item-badge">♥</span></div><span class="item-desc">Me chua ngọt đậm đà, giải khát cực đỉnh</span><span class="item-topping">+ Thêm: <span>hạt dưa +12k</span></span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Đá chanh</span></div><span class="item-desc">Chanh tươi vắt, đơn giản mà sảng khoái</span></div><span class="item-price">20k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Chanh muối</span></div><span class="item-desc">Mặn chua hài hoà, uống hoài không chán</span></div><span class="item-price">22k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Soda dâu / việt quất / chanh dây</span></div><span class="item-desc">Soda trái cây sủi bọt, màu đẹp vị tươi mát</span><span class="item-topping">+ Thêm: <span>đắc thơm +6k</span></span></div><span class="item-price">25k</span></div>
+    <div class="item"><div class="item-name-wrap"><div class="item-name-row"><span class="item-name">Soda bạc hà / chanh / cam</span></div><span class="item-desc">Soda mát lạnh the the, nhẹ nhàng dễ chịu</span></div><span class="item-price">25k</span></div>
+  </div>
+</section>
+
+<!-- DÙNG THÊM -->
+<section class="menu-section" id="dung-them">
+  <div class="section-header">
+    <div class="section-title">Topping & Thêm</div>
+  </div>
+  <div class="addons-grid">
+    <div class="addon-item"><span class="addon-name">3Q</span><span class="addon-price">6k</span></div>
+    <div class="addon-item"><span class="addon-name">Bánh flan</span><span class="addon-price">6k</span></div>
+    <div class="addon-item"><span class="addon-name">Đắc thơm</span><span class="addon-price">6k</span></div>
+    <div class="addon-item"><span class="addon-name">Kem chanh</span><span class="addon-price">10k</span></div>
+    <div class="addon-item"><span class="addon-name">Kem trứng / muối</span><span class="addon-price">10k</span></div>
+    <div class="addon-item"><span class="addon-name">Kem matcha / khoai môn</span><span class="addon-price">10k</span></div>
+    <div class="addon-item"><span class="addon-name">Mì ly</span><span class="addon-price">15k</span></div>
+    <div class="addon-item"><span class="addon-name">Hạt dưa</span><span class="addon-price">12k</span></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="gold-line"></div>
+  <div class="footer-links">
+    <div class="footer-item">
+      <span class="footer-label">TikTok</span>
+      <span class="footer-value">Q Zone Xin Chào</span>
+    </div>
+    <div class="footer-item">
+      <span class="footer-label">Fanpage</span>
+      <span class="footer-value">Q Zone</span>
+    </div>
+    <div class="footer-item">
+      <span class="footer-label">WiFi</span>
+      <span class="footer-value">68686868</span>
+    </div>
+  </div>
+  <div class="footer-copy">© Q Zone Coffee & Tea</div>
+</footer>
+
+<script>
+function showSection(id, e) {
+  clearSearch();
+  document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const btn = e ? e.target : document.querySelector(".nav-tab[onclick*='" + id + "']");
+  if (btn) { btn.classList.add('active'); btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
+}
+
+function clearSearch() {
+  const input = document.getElementById('search-input');
+  input.value = '';
+  document.getElementById('search-clear').style.display = 'none';
+  document.getElementById('search-results').style.display = 'none';
+  document.querySelectorAll('.menu-section').forEach(s => {
+    s.style.display = '';
+    s.querySelectorAll('.item').forEach(i => { i.style.display = ''; i.innerHTML = i.dataset.orig || i.innerHTML; });
+  });
+  const activeTab = document.querySelector('.nav-tab.active');
+  if (activeTab) {
+    const id = activeTab.getAttribute('onclick').match(/'([^']+)'/)[1];
+    document.getElementById(id).classList.add('active');
+  } else {
+    document.getElementById('ca-phe').classList.add('active');
+  }
+}
+
+function removeAccents(str) {
+  return str.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+}
+
+document.getElementById('search-input').addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  const clearBtn = document.getElementById('search-clear');
+  const resultsDiv = document.getElementById('search-results');
+
+  if (!q) { clearSearch(); return; }
+  clearBtn.style.display = 'block';
+
+  // Hide all sections, show results div
+  document.querySelectorAll('.menu-section').forEach(s => s.style.display = 'none');
+  resultsDiv.style.display = 'block';
+
+  // Collect all items
+  const allItems = document.querySelectorAll('.menu-section .item, .menu-section .addon-item');
+  const matches = [];
+  allItems.forEach(item => {
+    if (!item.dataset.orig) item.dataset.orig = item.innerHTML;
+    const text = item.dataset.orig;
+    const plain = text.replace(/<[^>]+>/g, '').toLowerCase();
+    const plainNoAccent = removeAccents(plain);
+    const qNoAccent = removeAccents(q);
+    if (plain.includes(q) || plainNoAccent.includes(qNoAccent)) matches.push({ item, text, plain });
+  });
+
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = '<div class="search-empty">Không tìm thấy món "<strong>' + this.value + '</strong>"</div>';
+    return;
+  }
+
+  const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  let html = '<div class="search-result-label">' + matches.length + ' kết quả cho "' + this.value + '"</div><div class="item-list">';
+  matches.forEach(({ item, text }) => {
+    const highlighted = text.replace(re, '<mark>$1</mark>');
+        const isAddon = item.classList.contains('addon-item');
+    if (isAddon) {
+      html += '<div class="item">' + highlighted + '</div>';
+    } else {
+      html += '<div class="item">' + (highlighted.match(/<div class="item-name-wrap">[\s\S]*?<\/div>\s*<span class="item-price">[^<]*<\/span>/)?.[0] || highlighted) + '</div>';
+    }
+  });
+  html += '</div>';
+  resultsDiv.innerHTML = html;
+});
+</script>
+</body>
+</html>
