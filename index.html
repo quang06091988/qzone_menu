@@ -1067,12 +1067,16 @@ document.getElementById('search-input').addEventListener('input', function() {
 // ── CART ──────────────────────────────────────────────
 const cart = {}; // { "Tên món|giá": { name, price, qty } }
 
-function addToCart(name, priceStr) {
+function addToCart(name, priceStr, triggerBtn) {
   const price = parseInt(priceStr.replace('k','')) * 1000;
   const key = name + '|' + price;
-  if (cart[key]) { cart[key].qty++; } 
+  if (cart[key]) { cart[key].qty++; }
   else { cart[key] = { name, price, qty: 1 }; }
   updateCartUI();
+
+  // Haptic feedback
+  if (navigator.vibrate) navigator.vibrate(30);
+
   // Animate cart button
   const btn = document.getElementById('cart-btn');
   btn.classList.remove('pop');
@@ -1201,7 +1205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.className = 'item-add';
     btn.textContent = '+';
     btn.title = 'Thêm vào giỏ';
-    btn.onclick = (e) => { e.stopPropagation(); addToCart(name, price); };
+    btn.onclick = (e) => { e.stopPropagation(); addToCart(name, price, btn); };
     el.appendChild(btn);
     // Save dataset.orig AFTER injecting + button so restore includes it
     el.dataset.orig = el.innerHTML;
@@ -1218,7 +1222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.className = 'addon-add';
     btn.textContent = '+';
     btn.title = 'Thêm vào giỏ';
-    btn.onclick = (e) => { e.stopPropagation(); addToCart(name, price); };
+    btn.onclick = (e) => { e.stopPropagation(); addToCart(name, price, btn); };
     el.appendChild(btn);
     el.dataset.orig = el.innerHTML;
   });
@@ -1233,7 +1237,7 @@ function reattachAddButtons() {
     const nameEl = el.querySelector('.item-name');
     const priceEl = el.querySelector('.item-price');
     if (!nameEl || !priceEl) return;
-    btn.onclick = (e) => { e.stopPropagation(); addToCart(nameEl.textContent.trim(), priceEl.textContent.trim()); };
+    btn.onclick = (e) => { e.stopPropagation(); addToCart(nameEl.textContent.trim(), priceEl.textContent.trim(), btn); };
   });
   document.querySelectorAll('.addon-item').forEach(el => {
     const btn = el.querySelector('.addon-add');
@@ -1241,7 +1245,7 @@ function reattachAddButtons() {
     const nameEl = el.querySelector('.addon-name');
     const priceEl = el.querySelector('.addon-price');
     if (!nameEl || !priceEl) return;
-    btn.onclick = (e) => { e.stopPropagation(); addToCart(nameEl.textContent.trim(), priceEl.textContent.trim()); };
+    btn.onclick = (e) => { e.stopPropagation(); addToCart(nameEl.textContent.trim(), priceEl.textContent.trim(), btn); };
   });
 }
 
