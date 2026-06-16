@@ -726,6 +726,37 @@
     text-align: center;
     margin-top: 8px;
   }
+
+  /* ITEM NOTE */
+  .cart-item-note {
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--divider);
+    color: var(--text-muted);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    padding: 4px 0;
+    outline: none;
+    margin-top: 4px;
+    transition: border-color 0.2s;
+  }
+  .cart-item-note::placeholder { color: #4a3828; }
+  .cart-item-note:focus { border-color: var(--gold-dim); color: var(--text); }
+  .cart-item-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  /* BILL NOTE */
+  .bill-item-note {
+    font-size: 14px;
+    color: #888;
+    font-style: italic;
+    margin-left: 44px;
+    margin-top: -8px;
+  }
 </style>
 </head>
 <body>
@@ -914,7 +945,8 @@
 
 <script>
 function showSection(id) {
-  clearSearch();
+  // Only clear search if actively searching
+  if (document.getElementById('search-input').value.trim()) clearSearch();
   document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -927,10 +959,16 @@ function clearSearch() {
   input.value = '';
   document.getElementById('search-clear').style.display = 'none';
   document.getElementById('search-results').style.display = 'none';
+  // Just reset visibility — never touch innerHTML (would destroy + buttons)
   document.querySelectorAll('.menu-section').forEach(s => {
     s.style.display = '';
-    s.querySelectorAll('.item, .addon-item').forEach(i => { i.style.display = ''; i.innerHTML = i.dataset.orig || i.innerHTML; });
+    s.querySelectorAll('.item, .addon-item').forEach(i => {
+      i.style.display = '';
+      // Restore highlight-free HTML but preserve + button via dataset.orig
+      if (i.dataset.orig) i.innerHTML = i.dataset.orig;
+    });
   });
+  reattachAddButtons();
   const activeTab = document.querySelector('.nav-tab.active');
   if (activeTab) {
     const id = activeTab.getAttribute('onclick').match(/'([^']+)'/)[1];
@@ -956,15 +994,17 @@ document.getElementById('search-input').addEventListener('input', function() {
   document.querySelectorAll('.menu-section').forEach(s => s.style.display = 'none');
   resultsDiv.style.display = 'block';
 
-  // Collect all items
+  // Collect all items — use textContent for matching (ignores injected + buttons)
   const allItems = document.querySelectorAll('.menu-section .item, .menu-section .addon-item');
   const matches = [];
+  const qNoAccent = removeAccents(q);
   allItems.forEach(item => {
-    if (!item.dataset.orig) item.dataset.orig = item.innerHTML;
-    const text = item.dataset.orig;
+    // Clone without + button to get clean text for matching and highlighting
+    const clone = item.cloneNode(true);
+    clone.querySelectorAll('.item-add, .addon-add').forEach(b => b.remove());
+    const text = clone.innerHTML;
     const plain = text.replace(/<[^>]+>/g, '').toLowerCase();
     const plainNoAccent = removeAccents(plain);
-    const qNoAccent = removeAccents(q);
     if (plain.includes(q) || plainNoAccent.includes(qNoAccent)) matches.push({ item, text, plain });
   });
 
@@ -1040,33 +1080,35 @@ function addToCart(name, priceStr) {
   btn.classList.add('pop');
 }
 
-function updateCartUI() {
+function renderCartBody() {
   const items = Object.values(cart).filter(i => i.qty > 0);
-  const totalQty = items.reduce((s, i) => s + i.qty, 0);
-  const totalPrice = items.reduce((s, i) => s + i.qty * i.price, 0);
-
-  // Update button
-  const btn = document.getElementById('cart-btn');
-  const countEl = document.getElementById('cart-count');
-  countEl.textContent = totalQty;
-  btn.classList.toggle('hidden', totalQty === 0);
-
-  // Update total
-  document.getElementById('cart-total').textContent = 
-    totalPrice >= 1000 ? (totalPrice/1000).toFixed(0) + 'k' : totalPrice + 'đ';
-
-  // Update body
   const body = document.getElementById('cart-body');
   if (items.length === 0) {
     body.innerHTML = '<div class="cart-empty">Chưa có món nào 🍃</div>';
     return;
   }
+  // Only re-render if item keys changed (added/removed), not on qty change
+  const newKeys = items.map(i => i.name + '|' + i.price).join(',');
+  if (body.dataset.keys === newKeys) {
+    // Just update qty numbers and subtotals in place
+    items.forEach(item => {
+      const key = item.name + '|' + item.price;
+      const el = body.querySelector(`[data-key="${CSS.escape(key)}"]`);
+      if (!el) return;
+      el.querySelector('.qty-num').textContent = item.qty;
+      el.querySelector('.cart-item-price').textContent = ((item.price * item.qty)/1000).toFixed(0) + 'k';
+    });
+    return;
+  }
+  body.dataset.keys = newKeys;
   body.innerHTML = items.map(item => {
     const key = item.name + '|' + item.price;
-    const priceStr = (item.price/1000).toFixed(0) + 'k';
     const subtotal = ((item.price * item.qty)/1000).toFixed(0) + 'k';
-    return `<div class="cart-item">
-      <div class="cart-item-name">${item.name}</div>
+    return `<div class="cart-item" style="flex-wrap:wrap;" data-key="${key}">
+      <div class="cart-item-wrap">
+        <div class="cart-item-name">${item.name}</div>
+        <input class="cart-item-note" type="text" placeholder="Ghi chú... (ít đường, ít đá...)" value="${item.note || ''}" oninput="updateNote('${key}', this.value)">
+      </div>
       <div class="qty-control">
         <button class="qty-btn" onclick="changeQty('${key}', -1)">−</button>
         <span class="qty-num">${item.qty}</span>
@@ -1077,11 +1119,36 @@ function updateCartUI() {
   }).join('');
 }
 
+function updateCartUI() {
+  const items = Object.values(cart).filter(i => i.qty > 0);
+  const totalQty = items.reduce((s, i) => s + i.qty, 0);
+  const totalPrice = items.reduce((s, i) => s + i.qty * i.price, 0);
+
+  // Update floating button
+  const btn = document.getElementById('cart-btn');
+  document.getElementById('cart-count').textContent = totalQty;
+  btn.classList.toggle('hidden', totalQty === 0);
+
+  // Update total
+  document.getElementById('cart-total').textContent =
+    totalPrice >= 1000 ? (totalPrice/1000).toFixed(0) + 'k' : totalPrice + 'đ';
+
+  renderCartBody();
+}
+
 function changeQty(key, delta) {
   if (!cart[key]) return;
   cart[key].qty += delta;
-  if (cart[key].qty <= 0) delete cart[key];
+  if (cart[key].qty <= 0) {
+    delete cart[key];
+    // Force full re-render since item removed
+    document.getElementById('cart-body').dataset.keys = '';
+  }
   updateCartUI();
+}
+
+function updateNote(key, value) {
+  if (cart[key]) cart[key].note = value;
 }
 
 function clearCart() {
@@ -1108,7 +1175,7 @@ function openBillView() {
     `<div class="bill-item-row">
       <span class="bill-item-qty">${item.qty}x</span>
       <span class="bill-item-name">${item.name}</span>
-    </div>`
+    </div>${item.note ? `<div class="bill-item-note">↳ ${item.note}</div>` : ''}`
   ).join('');
   closeCart();
   document.getElementById('bill-view').classList.add('open');
@@ -1136,6 +1203,8 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.title = 'Thêm vào giỏ';
     btn.onclick = (e) => { e.stopPropagation(); addToCart(name, price); };
     el.appendChild(btn);
+    // Save dataset.orig AFTER injecting + button so restore includes it
+    el.dataset.orig = el.innerHTML;
   });
 
   // Addon items
@@ -1151,8 +1220,30 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.title = 'Thêm vào giỏ';
     btn.onclick = (e) => { e.stopPropagation(); addToCart(name, price); };
     el.appendChild(btn);
+    el.dataset.orig = el.innerHTML;
   });
+
 });
+
+// Re-attach + button events after innerHTML restore (nodes are always new)
+function reattachAddButtons() {
+  document.querySelectorAll('.menu-section .item').forEach(el => {
+    const btn = el.querySelector('.item-add');
+    if (!btn) return;
+    const nameEl = el.querySelector('.item-name');
+    const priceEl = el.querySelector('.item-price');
+    if (!nameEl || !priceEl) return;
+    btn.onclick = (e) => { e.stopPropagation(); addToCart(nameEl.textContent.trim(), priceEl.textContent.trim()); };
+  });
+  document.querySelectorAll('.addon-item').forEach(el => {
+    const btn = el.querySelector('.addon-add');
+    if (!btn) return;
+    const nameEl = el.querySelector('.addon-name');
+    const priceEl = el.querySelector('.addon-price');
+    if (!nameEl || !priceEl) return;
+    btn.onclick = (e) => { e.stopPropagation(); addToCart(nameEl.textContent.trim(), priceEl.textContent.trim()); };
+  });
+}
 
 </script>
 
@@ -1176,7 +1267,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <span class="cart-total-label">Tổng cộng</span>
       <span class="cart-total-amount" id="cart-total">0đ</span>
     </div>
-    <button class="cart-call-btn" onclick="openBillView()">Đưa bill cho nhân viên</button>
+    <button class="cart-call-btn" onclick="openBillView()">Gọi món</button>
     <button class="cart-clear" onclick="clearCart()">Xoá tất cả</button>
   </div>
 </div>
