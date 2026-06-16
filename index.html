@@ -403,6 +403,329 @@
     color: var(--gold);
     font-weight: 500;
   }
+
+  /* CART BUTTON */
+  .cart-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 200;
+    background: var(--gold);
+    color: #1a0e0a;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 20px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(201,169,110,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .cart-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(201,169,110,0.5); }
+  .cart-btn.hidden { display: none; }
+  .cart-count {
+    background: #8b1a1a;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+
+  /* ADD BTN on items */
+  .item-add {
+    background: none;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    color: var(--gold);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s;
+    line-height: 1;
+  }
+  .item-add:hover { background: var(--gold); color: #1a0e0a; border-color: var(--gold); }
+  .addon-add {
+    background: none;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    color: var(--gold);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+    line-height: 1;
+  }
+  .addon-add:hover { background: var(--gold); color: #1a0e0a; border-color: var(--gold); }
+
+  /* CART OVERLAY */
+  .cart-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 300;
+    backdrop-filter: blur(2px);
+  }
+  .cart-overlay.open { display: block; }
+  .cart-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 80vh;
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    border-top: 1px solid var(--divider);
+    z-index: 400;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+  .cart-panel.open { transform: translateY(0); }
+  .cart-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--divider);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .cart-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--gold);
+  }
+  .cart-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+  }
+  .cart-body {
+    overflow-y: auto;
+    flex: 1;
+    padding: 12px 20px;
+  }
+  .cart-empty {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 40px 0;
+  }
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-item-name {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .cart-item-price {
+    font-size: 14px;
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    min-width: 52px;
+    text-align: right;
+  }
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .qty-btn {
+    background: var(--surface2);
+    border: 1px solid var(--divider);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    color: var(--gold);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .qty-btn:hover { border-color: var(--gold); }
+  .qty-num {
+    font-size: 14px;
+    color: var(--text);
+    min-width: 16px;
+    text-align: center;
+  }
+  .cart-footer {
+    padding: 16px 20px 28px;
+    border-top: 1px solid var(--divider);
+    flex-shrink: 0;
+  }
+  .cart-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .cart-total-label {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .cart-total-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--gold);
+  }
+  .cart-call-btn {
+    width: 100%;
+    background: var(--gold);
+    color: #1a0e0a;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+  .cart-call-btn:hover { background: var(--gold-light); }
+  .cart-clear {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 4px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+  }
+  .cart-clear:hover { color: var(--text); }
+
+  /* Flash animation */
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+  .pop { animation: pop 0.2s ease; }
+
+  /* BILL VIEW */
+  .bill-view {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0d0d0d;
+    z-index: 500;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 32px;
+    cursor: pointer;
+  }
+  .bill-view.open { display: flex; }
+  .bill-divider {
+    width: 100%;
+    max-width: 320px;
+    border: none;
+    border-top: 1px dashed #444;
+    margin: 20px 0;
+  }
+  .bill-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 6px;
+    text-align: center;
+  }
+  .bill-table-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0 0;
+  }
+  .bill-table-label {
+    font-size: 15px;
+    color: #888;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .bill-table-input {
+    background: none;
+    border: none;
+    border-bottom: 1px solid #555;
+    color: #fff;
+    font-size: 18px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 600;
+    width: 60px;
+    text-align: center;
+    outline: none;
+    padding: 2px 4px;
+  }
+  .bill-table-input::placeholder { color: #444; }
+  .bill-items {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .bill-item-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .bill-item-qty {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    min-width: 32px;
+    text-align: right;
+    font-family: 'Playfair Display', serif;
+  }
+  .bill-item-name {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 300;
+    line-height: 1.3;
+  }
+  .bill-hint {
+    font-size: 12px;
+    color: #444;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 8px;
+  }
 </style>
 </head>
 <body>
@@ -700,6 +1023,176 @@ document.getElementById('search-input').addEventListener('input', function() {
   html += '</div>';
   resultsDiv.innerHTML = html;
 });
+
+// ── CART ──────────────────────────────────────────────
+const cart = {}; // { "Tên món|giá": { name, price, qty } }
+
+function addToCart(name, priceStr) {
+  const price = parseInt(priceStr.replace('k','')) * 1000;
+  const key = name + '|' + price;
+  if (cart[key]) { cart[key].qty++; } 
+  else { cart[key] = { name, price, qty: 1 }; }
+  updateCartUI();
+  // Animate cart button
+  const btn = document.getElementById('cart-btn');
+  btn.classList.remove('pop');
+  void btn.offsetWidth;
+  btn.classList.add('pop');
+}
+
+function updateCartUI() {
+  const items = Object.values(cart).filter(i => i.qty > 0);
+  const totalQty = items.reduce((s, i) => s + i.qty, 0);
+  const totalPrice = items.reduce((s, i) => s + i.qty * i.price, 0);
+
+  // Update button
+  const btn = document.getElementById('cart-btn');
+  const countEl = document.getElementById('cart-count');
+  countEl.textContent = totalQty;
+  btn.classList.toggle('hidden', totalQty === 0);
+
+  // Update total
+  document.getElementById('cart-total').textContent = 
+    totalPrice >= 1000 ? (totalPrice/1000).toFixed(0) + 'k' : totalPrice + 'đ';
+
+  // Update body
+  const body = document.getElementById('cart-body');
+  if (items.length === 0) {
+    body.innerHTML = '<div class="cart-empty">Chưa có món nào 🍃</div>';
+    return;
+  }
+  body.innerHTML = items.map(item => {
+    const key = item.name + '|' + item.price;
+    const priceStr = (item.price/1000).toFixed(0) + 'k';
+    const subtotal = ((item.price * item.qty)/1000).toFixed(0) + 'k';
+    return `<div class="cart-item">
+      <div class="cart-item-name">${item.name}</div>
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty('${key}', -1)">−</button>
+        <span class="qty-num">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty('${key}', 1)">+</button>
+      </div>
+      <div class="cart-item-price">${subtotal}</div>
+    </div>`;
+  }).join('');
+}
+
+function changeQty(key, delta) {
+  if (!cart[key]) return;
+  cart[key].qty += delta;
+  if (cart[key].qty <= 0) delete cart[key];
+  updateCartUI();
+}
+
+function clearCart() {
+  Object.keys(cart).forEach(k => delete cart[k]);
+  updateCartUI();
+  closeCart();
+}
+
+function openCart() {
+  document.getElementById('cart-overlay').classList.add('open');
+  document.getElementById('cart-panel').classList.add('open');
+}
+
+function closeCart() {
+  document.getElementById('cart-overlay').classList.remove('open');
+  document.getElementById('cart-panel').classList.remove('open');
+}
+
+function openBillView() {
+  const items = Object.values(cart).filter(i => i.qty > 0);
+  if (items.length === 0) return;
+  // Populate bill items
+  document.getElementById('bill-items').innerHTML = items.map(item =>
+    `<div class="bill-item-row">
+      <span class="bill-item-qty">${item.qty}x</span>
+      <span class="bill-item-name">${item.name}</span>
+    </div>`
+  ).join('');
+  closeCart();
+  document.getElementById('bill-view').classList.add('open');
+  // Focus table input
+  setTimeout(() => document.getElementById('bill-table').focus(), 100);
+}
+
+function closeBillView() {
+  document.getElementById('bill-view').classList.remove('open');
+  document.getElementById('bill-table').value = '';
+}
+
+// ── INJECT ADD BUTTONS ─────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Regular items
+  document.querySelectorAll('.menu-section .item').forEach(el => {
+    const nameEl = el.querySelector('.item-name');
+    const priceEl = el.querySelector('.item-price');
+    if (!nameEl || !priceEl) return;
+    const name = nameEl.textContent.trim();
+    const price = priceEl.textContent.trim();
+    const btn = document.createElement('button');
+    btn.className = 'item-add';
+    btn.textContent = '+';
+    btn.title = 'Thêm vào giỏ';
+    btn.onclick = (e) => { e.stopPropagation(); addToCart(name, price); };
+    el.appendChild(btn);
+  });
+
+  // Addon items
+  document.querySelectorAll('.addon-item').forEach(el => {
+    const nameEl = el.querySelector('.addon-name');
+    const priceEl = el.querySelector('.addon-price');
+    if (!nameEl || !priceEl) return;
+    const name = nameEl.textContent.trim();
+    const price = priceEl.textContent.trim();
+    const btn = document.createElement('button');
+    btn.className = 'addon-add';
+    btn.textContent = '+';
+    btn.title = 'Thêm vào giỏ';
+    btn.onclick = (e) => { e.stopPropagation(); addToCart(name, price); };
+    el.appendChild(btn);
+  });
+});
+
 </script>
+
+<!-- CART BUTTON -->
+<button class="cart-btn hidden" id="cart-btn" onclick="openCart()">
+  🛒 Giỏ của bạn <span class="cart-count" id="cart-count">0</span>
+</button>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <div class="cart-title">Giỏ của bạn</div>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body" id="cart-body">
+    <div class="cart-empty">Chưa có món nào 🍃</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Tổng cộng</span>
+      <span class="cart-total-amount" id="cart-total">0đ</span>
+    </div>
+    <button class="cart-call-btn" onclick="openBillView()">Đưa bill cho nhân viên</button>
+    <button class="cart-clear" onclick="clearCart()">Xoá tất cả</button>
+  </div>
+</div>
+
+<!-- BILL VIEW -->
+<div class="bill-view" id="bill-view" onclick="closeBillView()">
+  <div class="bill-brand">Q. ZONE</div>
+  <hr class="bill-divider">
+  <div class="bill-table-row">
+    <span class="bill-table-label">Bàn</span>
+    <input class="bill-table-input" id="bill-table" type="text" placeholder="__" maxlength="3" onclick="event.stopPropagation()">
+  </div>
+  <hr class="bill-divider">
+  <div class="bill-items" id="bill-items"></div>
+  <hr class="bill-divider">
+  <div class="bill-hint">chạm để đóng</div>
+</div>
 </body>
 </html>
